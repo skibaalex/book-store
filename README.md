@@ -12,13 +12,13 @@ I will build the back end twice once with RESTful API and the second time with G
 ### RESTful API Stack
 - Node.js
 - Express
-- Sqlite
-- Sequelize (maybe TypeORM)
+- MongoDB
+- mongoose
 
 ### GraphQL Stack
 - Node.js
 - Apollo Server
-- MongoDB
-- mongoose
+- Postgres
+- TypeORM
 
 
