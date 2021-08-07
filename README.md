@@ -1,8 +1,7 @@
-# Code Oasis Coding Test
-This is a second attempt for the coding assigment for Code Oasis.
-The assigment is to build the back and front end for a book store with admin panel.
+# Book Store
+The assignment is to build the back and front end for a book store with admin panel.
 
-assiment has to be completed in 4 days.
+assignment has to be completed in 4 days.
 
 I will build the back end twice once with RESTful API and the second time with GraphQL.
 
