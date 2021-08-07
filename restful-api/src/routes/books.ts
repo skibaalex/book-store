@@ -12,7 +12,6 @@ const booksRouter = Router();
  * require the user to be authenticated
  */
 booksRouter.get('/purchased', authenticate, asyncHandler(async (req: Request, res: Response) => {
-  console.log(req.user!._id);
   const books = await User.findById(req.user!._id).populate('books').select(['books', '-_id']);
   if (!books) throw new CustomError('Oops something went wrong', 500);
   res.status(200).send(books);
