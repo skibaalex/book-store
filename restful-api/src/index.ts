@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cookies from 'cookie-parser';
+import cors from 'cors';
 import api from './routes';
 import errorHandle from './helpers/errorHandle';
 
@@ -12,6 +13,7 @@ dotenv.config();
  * App configurations
  */
 app.use(cookies());
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use('/api', api);
