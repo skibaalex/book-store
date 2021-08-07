@@ -22,6 +22,7 @@ I will build the back end twice once with RESTful API and the second time with G
 - TypeORM
 
 ### Front End Stack
+Used [create-react-app](https://github.com/facebook/create-react-app) as a boiler plate
 - React
 - React-Router
 - Redux
