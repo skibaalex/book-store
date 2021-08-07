@@ -2,6 +2,7 @@ import { Schema, model, Types } from 'mongoose';
 import validator from 'validator';
 
 export interface UserType {
+  _id: Types.ObjectId,
   username: string,
   password: string,
   email: string

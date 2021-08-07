@@ -44,4 +44,13 @@ booksRouter.post('/purchase/:id', (req, res) => {
   res.send(req.body);
 });
 
+/**
+ * Get all books by user id
+ * require the user to be authenticated
+ */
+booksRouter.post('/purchase/:id', (req, res) => {
+  console.log(req.body);
+  res.send(req.body);
+});
+
 export default booksRouter;
