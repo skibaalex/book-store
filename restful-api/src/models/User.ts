@@ -5,7 +5,8 @@ export interface UserType {
   _id: Types.ObjectId,
   username: string,
   password: string,
-  email: string
+  email: string,
+  isAdmin: boolean
 }
 
 const userSchema = new Schema({

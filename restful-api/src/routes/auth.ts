@@ -35,11 +35,15 @@ authRouter.post('/register', asyncHandler(async (req: Request, res: Response) =>
 authRouter.post('/login', asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user: UserType = await User.findOne({ email });
-  const match: boolean = await bcrypt.compare(password, user.password);
-  if (match) {
-    return res.status(200).cookie('refreshToken', createRefreshToken(user), cookieOptions).json({ token: createAccessToken(user), user });
+  try {
+    const match: boolean = await bcrypt.compare(password, user.password);
+    if (match) {
+      return res.status(200).cookie('refreshToken', createRefreshToken(user), cookieOptions).json({ token: createAccessToken(user), user });
+    }
+  } catch (er) {
+    throw new CustomError('Email or Password are incorrect', 403);
   }
-  throw new CustomError('Email or Password are incorrect', 403);
+  throw new CustomError('Something went went wrong', 400);
 }));
 
 /**

@@ -1,22 +1,33 @@
 import { Schema, model } from 'mongoose';
 
+export interface BookType{
+  title: string,
+  description: string,
+  price: number,
+  author?: string,
+  publishedAt?: string
+}
+
 const bookSchema = new Schema({
   title: {
     type: String,
     required: true,
+    unique: true,
   },
   description: {
     type: String,
-    require: true,
+    required: true,
   },
   price: {
     type: Number,
-    require: true,
+    required: true,
   },
   author: {
     type: String,
   },
-  publishedAt: String,
+  publishedAt: {
+    type: String,
+  },
 });
 
 const Book = model('Book', bookSchema);
