@@ -1,14 +1,13 @@
+/* eslint-disable no-param-reassign */
 import { Request, Response, NextFunction } from 'express';
 
 // eslint-disable-next-line no-unused-vars
 const errorHandle = (err: any, _req: Request, res: Response, _next: NextFunction) => {
-  // eslint-disable-next-line no-param-reassign
-  if (err.name === 'ValidationError') err.status = 400;
-  if (err.status) {
-    return res.status(err.status).json(err);
+  if (err.name === 'ValidationError' || err.name === 'MongoError') err.status = 400;
+  if (err.code === 11000) {
+    err.message = 'Document already exists';
   }
-  console.log(err);
-  return res.status(500).send(err);
+  return res.status(err.status || 500).json(err);
 };
 
 export default errorHandle;

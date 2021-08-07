@@ -2,7 +2,7 @@ import { sign } from 'jsonwebtoken';
 import { UserType } from '../models/User';
 
 export const createAccessToken = (user: UserType) => {
-  const token = sign({ _id: user._id }, process.env.SECRET!, { expiresIn: '15m' });
+  const token = sign({ _id: user._id }, process.env.SECRET!, { expiresIn: '1d' });
   return token;
 };
 
