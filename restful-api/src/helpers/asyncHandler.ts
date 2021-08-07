@@ -12,7 +12,6 @@ function asyncHandler(cb: Function) {
     try {
       await cb(req, res, next);
     } catch (error) {
-      console.log('Error: ', error);
       next(error);
     }
   };
