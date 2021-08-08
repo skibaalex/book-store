@@ -1,0 +1,10 @@
+@mixin after-underline ($left, $bottom, $translateY, $translateX){
+    content: '';
+    width: 90%;
+    height: 4px;
+    background-color: $primary-color;
+    position: absolute;
+    left: $left;
+    bottom: -10px;
+    transform: translateY($translateY) translateX($translateX)
+}

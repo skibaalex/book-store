@@ -1,0 +1,91 @@
+.book-list{
+    display: flex;
+}
+
+
+.book-card-warper{
+    padding: $spacing * 0.8;
+    border-radius: 4px;
+    border: 1px solid rgb(228, 228, 228) ;
+}
+
+.book-card{
+    max-width: 250px;   
+}
+
+.book-description{
+    max-height: auto;
+    margin-top: $spacing;
+    transition: max-height 0.6s ease-out;
+    overflow: hidden;
+}
+
+.book-title{
+    position: relative;
+    font-size: 24;
+    font-weight: 600;
+    &::after{
+        @include after-underline(0,0,0,0)
+    }
+    transition:ease-in-out 0.8s;
+}
+
+.card-header{
+    display: flex;
+    justify-content: space-between;
+    margin: $spacing 0;
+    .book-price{
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 16px;
+        &::before{
+            content: '$';
+        }
+    }
+}
+
+.book-details{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    .book-author{
+        font-style: italic;
+        font-size: 10px;
+        font-weight: 500;
+    }
+}
+
+.card-footer{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+    padding-top: $spacing;
+    
+}
+
+.book-img{
+    max-width: 250px;
+    max-height: 375px;
+}
+
+.btn{
+    color: $dark-300;
+    font-size: 14px;
+    font-weight: 600;
+    
+    &.primary{
+        color: #fff;
+        background-color: $primary-color;
+        padding: 1em 2em;
+        border-radius: 10px;
+        position: relative;
+        &:hover{
+           opacity: 0.8;
+        }
+    }
+    &:hover, &:visited, &:link, &:active
+    {
+        text-decoration: none;
+    }
+}
+
