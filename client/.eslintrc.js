@@ -20,7 +20,8 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
-    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
+    'no-underscore-dangle': [2, { allow: ['_id'] }],
+    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts'] }],
     'import/extensions': [
       'error',
       'ignorePackages',
@@ -32,6 +33,7 @@ module.exports = {
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 0,
   },
   settings: {
     'import/resolver': {

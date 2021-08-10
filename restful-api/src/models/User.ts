@@ -3,17 +3,12 @@ import validator from 'validator';
 
 export interface UserType {
   _id: Types.ObjectId,
-  username: string,
   password: string,
   email: string,
   isAdmin: boolean
 }
 
 const userSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-  },
   email: {
     type: String,
     required: true,
