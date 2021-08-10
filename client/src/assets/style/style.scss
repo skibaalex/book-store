@@ -58,8 +58,9 @@ p{
 }
 
 .col-3{
-    flex-basis: 50%;
+    flex-basis: 33%;
     padding: $spacing;
+    align-items: center;
 }
 
 .col-4{

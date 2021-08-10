@@ -25,12 +25,24 @@
 }
 
 form{
-    input, label {
+    width: 100%;
+    input, label, textarea {
         display:block;
+        width: 100%;
     }
     input{
-        padding: $spacing /3 $spacing;
+        padding: $spacing;
+        font-size: 16px;
+        font-family: 'Poppins', sans-serif;
+        line-height: 24px;
         margin-bottom: $spacing;
+    }
+    textarea{
+        min-height: 250px;
+        padding: $spacing;
+        font-size: 16px;
+        font-family: 'Poppins', sans-serif;
+        line-height: 24px;
     }
     .buttons{
         margin: $spacing *2 0;

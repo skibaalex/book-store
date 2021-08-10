@@ -2,7 +2,9 @@ import {
   createContext, FC, useEffect, useReducer,
 } from 'react';
 import jwtDecode from 'jwt-decode';
-import { User } from '../../types';
+import { myBooks } from '../../store/reducers/booksReducer';
+import { useDispatch } from '../../store';
+import { Book, User } from '../../types';
 import HTTP from '../../hooks/HTTP';
 
 export interface AuthState {
@@ -46,7 +48,6 @@ const setSession = (accessToken: string | null) => {
   } else {
     localStorage.removeItem('accessToken');
     delete HTTP.defaults.headers.Authorization;
-    console.log(HTTP.defaults);
   }
 };
 
@@ -105,7 +106,7 @@ const AuthContext = createContext({
 
 export const AuthProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const booksDispatch = useDispatch();
   const login = async (email: string, password: string): Promise<{success: boolean}> => {
     try {
       const response = await HTTP.post('/auth/login', { email, password });
@@ -155,7 +156,8 @@ export const AuthProvider: FC = ({ children }) => {
         if (!isValidToken(accessToken)) throw new Error('Access token was not found');
         setSession(accessToken);
         const response = await HTTP.get('/auth');
-        const user = response.data;
+        const user = response.data as User;
+        booksDispatch(myBooks(user!.books as [Book]));
         return dispatch({
           type: 'INITIALIZE',
           payload: {

@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 // eslint-disable-next-line import/no-unresolved
 import { IoIosStar, IoIosStarHalf, IoIosStarOutline } from 'react-icons/io';
 import { Book } from '../types';
 import HTTP from '../hooks/HTTP';
 import BookCard from '../components/books/BookCard';
-import { BookState, getBookByID } from '../store/reducers/booksReducer';
+import { BookState, buyBook, getBookByID } from '../store/reducers/booksReducer';
 import { RootState, useDispatch, useSelector } from '../store';
 
 export interface BookProps {
@@ -17,7 +17,7 @@ const BookDetails: FC<BookProps> = () => {
   const [otherBooks, setOtherBooks] = useState<[Book] | []>([]);
   const [notFound, setNotFound] = useState(false);
   const { id } = useParams<{id: string}>();
-  // const history = useHistory();
+  const history = useHistory();
   // eslint-disable-next-line max-len
   const { allIds, allBooksById, isInitialized }:BookState = useSelector((state: RootState) => state.books);
   const dispatch = useDispatch();
@@ -25,6 +25,11 @@ const BookDetails: FC<BookProps> = () => {
     if (!isInitialized) { dispatch(getBookByID(id)); }
     setBook(allBooksById[id]);
   }, [dispatch, allIds]);
+
+  const handleBuy = () => {
+    dispatch(buyBook(book!));
+    history.push('/account');
+  };
 
   useEffect(() => {
     const getBook = async () => {
@@ -74,7 +79,7 @@ const BookDetails: FC<BookProps> = () => {
               {book.description}
             </p>
           </div>
-          <button type="button" className="btn">Buy Now</button>
+          <button type="button" onClick={handleBuy} className="btn">Buy Now</button>
           <button type="button" className="btn btn-secondary">Add To Cart</button>
         </div>
       </div>

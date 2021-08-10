@@ -1,7 +1,11 @@
-/* eslint-disable no-unused-vars */
-import { FC, useEffect, useState } from 'react';
-// eslint-disable-next-line import/no-unresolved
-import { IoIosStar, IoIosStarHalf, IoIosStarOutline } from 'react-icons/io';
+import {
+  FC, useEffect, useState,
+} from 'react';
+import {
+  IoIosStar, IoIosStarHalf, IoIosStarOutline, IoIosArrowDown, IoIosArrowUp,
+  // eslint-disable-next-line import/no-unresolved
+} from 'react-icons/io';
+import { useHistory } from 'react-router';
 import { BookState, initializeBooks } from '../store/reducers/booksReducer';
 import { RootState, useDispatch, useSelector } from '../store';
 import { Book } from '../types';
@@ -11,16 +15,48 @@ export interface AdminProps {
 }
 
 interface BookAccordionProps{
-  book: Book
+  book: Book,
+  history: any
 }
 
-const BookAccordion: FC<BookAccordionProps> = ({ book }) => {
-  const [edit, setEdit] = useState(false);
-  const [title, setTitle] = useState(book.title);
-  const [publishAt, setPublishAt] = useState(book.publishedAt);
-  const [price, setPrice] = useState(book.price);
-  const [author, setAuthor] = useState(book.author);
-  const [description, setDescription] = useState(book.description);
+interface BookDetailsProps{
+  book: Book,
+  history: any,
+}
+
+const BookDetails:FC<BookDetailsProps> = ({ book, history }) => (
+  <div className="row">
+    <div className="col-2 image">
+      <img width="70%" src="https://images-na.ssl-images-amazon.com/images/I/41x4tuvyQOS._SY291_BO1,204,203,200_QL40_FMwebp_.jpg" alt="product" />
+    </div>
+    <div className="col-2 book-details">
+      <h4 className="price">
+        {book.price}
+      </h4>
+      <div className="rating">
+        <IoIosStar className="star" />
+        <IoIosStar className="star" />
+        <IoIosStar className="star" />
+        <IoIosStarHalf className="star" />
+        <IoIosStarOutline className="star" />
+      </div>
+      <div className="book-description">
+        <h3>Book Description</h3>
+        <p>
+          {book.description}
+        </p>
+      </div>
+      <button onClick={() => history.push(`admin/edit/${book._id}`)} type="button" className="btn">Edit</button>
+    </div>
+  </div>
+);
+
+const BookAccordion: FC<BookAccordionProps> = ({ book, history }) => {
+  const [show, setShow] = useState(false);
+  const {
+    title, author, publishedAt,
+  } = book;
+
   return (
     <div className="row">
       <div className="book-accordion">
@@ -29,50 +65,17 @@ const BookAccordion: FC<BookAccordionProps> = ({ book }) => {
             <h1>{title}</h1>
           </div>
           <div className="col-3">
-            <p className="author">{`${author} ${publishAt ? `, ${publishAt}` : ''}`}</p>
+            <p className="author">{`${author} ${publishedAt ? `, ${publishedAt}` : ''}`}</p>
+          </div>
+          <div className="col-3">
+            <div className="icon-wrap">
+              <button onClick={() => setShow((prev) => !prev)} className="icon-btn" type="button">
+                {show ? <IoIosArrowUp className="icon" size="24px" /> : <IoIosArrowDown className="icon" size="24px" />}
+              </button>
+            </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-2 image">
-            <img width="70%" src="https://images-na.ssl-images-amazon.com/images/I/41x4tuvyQOS._SY291_BO1,204,203,200_QL40_FMwebp_.jpg" alt="product" />
-          </div>
-          <div className="col-2 book-details">
-            {!edit
-              ? (
-                <>
-                  <h4 className="price">
-                    {price}
-                  </h4>
-                  <div className="rating">
-                    <IoIosStar className="star" />
-                    <IoIosStar className="star" />
-                    <IoIosStar className="star" />
-                    <IoIosStarHalf className="star" />
-                    <IoIosStarOutline className="star" />
-                  </div>
-                  <div className="book-description">
-                    <h3>Book Description</h3>
-                    <p>
-                      {description}
-                    </p>
-                  </div>
-                </>
-              )
-              : (
-                <h1>Edit</h1>
-              )}
-            {edit
-              ? (
-                <>
-                  <button onClick={() => setEdit((prev) => !prev)} type="button" className="btn success">Save</button>
-                  <button onClick={() => setEdit((prev) => !prev)} type="button" className="btn">Cancel</button>
-                </>
-              )
-
-              : <button onClick={() => setEdit((prev) => !prev)} type="button" className="btn">Edit</button>}
-          </div>
-        </div>
-
+        {show && <BookDetails history={history} book={book} />}
       </div>
     </div>
   );
@@ -82,14 +85,16 @@ const Admin: FC<AdminProps> = () => {
   // eslint-disable-next-line max-len
   const { allIds, allBooksById, isInitialized }:BookState = useSelector((state: RootState) => state.books);
   const dispatch = useDispatch();
+  const history = useHistory();
   useEffect(() => {
     if (!isInitialized) { dispatch(initializeBooks()); }
   }, [dispatch, allIds]);
+
   return (
     <div className="container">
       <h2>Admin Pannel</h2>
       {allIds.map((id) => (
-        <BookAccordion book={allBooksById[id]} key={id} />
+        <BookAccordion book={allBooksById[id]} history={history} key={id} />
       ))}
     </div>
   );

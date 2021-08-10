@@ -11,6 +11,7 @@ export interface BookState{
     allIds: Array<string>,
     cart: Array<Book>,
     isInitialized: boolean
+    myBooks: Array<Book>
 }
 
 export type BookActionType = 'UPDATE' | 'DELETE' | 'ADD_TO_CART' | 'INITIALIZE' | 'GET_BOOK_BY_ID';
@@ -25,6 +26,7 @@ const initialState: BookState = {
   allIds: [],
   cart: [],
   isInitialized: false,
+  myBooks: [],
 };
 
 const slice = createSlice({
@@ -36,11 +38,27 @@ const slice = createSlice({
       state.allIds = Object.keys(state.allBooksById);
       state.isInitialized = true;
     },
-    bookById: (state, action: PayloadAction<BookActionPayload>) => {
-      const obj = objFromArray([action.payload]);
-      state.allBooksById = { obj, ...state.allBooksById };
+    addBookToMyBooks: (state, action: PayloadAction<BookActionPayload>) => {
+      const { book } = action.payload;
+      if (!state.myBooks.includes(book!)) {
+        state.myBooks.push(book!);
+      }
+    },
+    addArrayToMyBooks: (state, action: PayloadAction<BookActionPayload>) => {
+      const { books } = action.payload;
+      const arr = books!.filter((book) => !state.myBooks.includes(book));
+      state.myBooks = [...arr, ...state.myBooks];
+    },
+    getBooks: (state, action: PayloadAction<BookActionPayload>) => {
+      const { books } = action.payload;
+      const obj = objFromArray(books!);
+      state.allBooksById = { ...obj, ...state.allBooksById };
       state.allIds = Object.keys(state.allBooksById);
       state.isInitialized = true;
+    },
+    updateBookRecord: (state, action: PayloadAction<BookActionPayload>) => {
+      const { book } = action.payload;
+      state.allBooksById[book!._id] = book;
     },
     addCart: (state, action: PayloadAction<BookActionPayload>) => {
       state.cart.push(action.payload as Book);
@@ -49,15 +67,11 @@ const slice = createSlice({
       const { book } = action.payload;
       state.cart = _.reject(state.cart, { _id: book!._id });
     },
-    update: (state, action: PayloadAction<BookActionPayload>) => {
-      const { book } = action.payload;
-      state.cart = _.reject(state.cart, { _id: book!._id });
-    },
   },
 });
 
 const {
-  init, bookById, addCart, removeCart,
+  init, getBooks, addCart, removeCart, updateBookRecord, addBookToMyBooks, addArrayToMyBooks,
 } = slice.actions;
 
 export const { reducer } = slice;
@@ -73,9 +87,10 @@ export const getBookByID = (id: string) => async (dispatch: (arg0: any) => void)
   try {
     // return a book object and other books to feature in an array
     const response = await HTTP.get(`books/${id}`);
-    dispatch(bookById({ books: [response.data.book, ...response.data.otherBooks] as [Book] }));
+    const { book, otherBooks } = response.data;
+    dispatch(getBooks({ books: [book, ...otherBooks] as [Book] }));
   } catch {
-    console.error('error');
+    // TODO: Handle errors
   }
 };
 
@@ -87,9 +102,18 @@ export const removeFromCart = (book: Book) => async (dispatch: (arg0: any) => vo
   dispatch(removeCart({ book }));
 };
 
+export const buyBook = (book: Book) => async (dispatch: (arg0: any) => void) => {
+  await HTTP.post(`/books/purchase/${book._id}`);
+  dispatch(addBookToMyBooks({ book }));
+};
+
+export const myBooks = (books: [Book]) => async (dispatch: (arg0: any) => void) => {
+  dispatch(addArrayToMyBooks({ books }));
+};
+
 export const updateBook = (update: Book) => async (dispatch: (arg0: any) => void) => {
-  const response = await HTTP.post('books/all', update);
-  dispatch(init(response.data));
+  await HTTP.put(`/books/${update._id}`, update);
+  dispatch(updateBookRecord({ book: update }));
 };
 
 export const deleteBook = () => async (dispatch: (arg0: any) => void) => {

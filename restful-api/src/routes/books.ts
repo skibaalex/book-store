@@ -75,7 +75,8 @@ booksRouter.post('/purchase/:id', authenticate, asyncHandler(async (req: Request
   const { id } = req.params;
   const book = await Book.findById(id);
   if (!book) throw new CustomError('Wrong id', 400);
-  const user = await User.findByIdAndUpdate(req.user!._id, { $push: { books: book._id } });
+  const user = await User.findByIdAndUpdate(req.user!._id,
+    { $addToSet: { books: book } });
   if (!user) throw new CustomError('Oops something went wrong', 500);
   res.status(200).send(book);
 }));

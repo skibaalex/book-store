@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+// eslint-disable-next-line import/no-unresolved
+import { IoIosCart } from 'react-icons/io';
 import useAuth from '../../hooks/useAuth';
 
 const Header = () => {
@@ -25,8 +27,10 @@ const Header = () => {
             {isAuthenticated
               ? (
                 <>
+                  <li><Link className="nav-link" to="/account">Account</Link></li>
                   {user?.isAdmin && <li><Link className="nav-link" to="/admin">Admin</Link></li>}
                   <li><Link onClick={() => logout()} className="nav-link" to="/">Logout</Link></li>
+                  <li className="cart"><IoIosCart /></li>
                 </>
               )
               : (
