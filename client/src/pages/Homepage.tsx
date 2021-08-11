@@ -20,7 +20,7 @@ const HomePage: FC<HomePageProps> = () => {
   return (
     <>
       <Jumbotron />
-      {isInitialized ? <BookList headline="Featured Books" books={books} /> : <h1>Lodaing</h1>}
+      {isInitialized ? <BookList path="" headline="Featured Books" books={books} /> : <h1>Lodaing</h1>}
     </>
   );
 };

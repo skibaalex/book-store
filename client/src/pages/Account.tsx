@@ -19,7 +19,7 @@ const Account = () => {
     );
   }
   return (
-    <BookList headline="Your Books" books={books!} />
+    <BookList path="Account" headline="Your Books" books={books!} />
   );
 };
 

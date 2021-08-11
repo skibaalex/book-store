@@ -19,6 +19,7 @@ export type BookActionType = 'UPDATE' | 'DELETE' | 'ADD_TO_CART' | 'INITIALIZE' 
 export interface BookActionPayload {
     book?: Book,
     books?: [Book],
+    id?: string
 }
 
 const initialState: BookState = {
@@ -56,9 +57,20 @@ const slice = createSlice({
       state.allIds = Object.keys(state.allBooksById);
       state.isInitialized = true;
     },
+    addBook: (state, action: PayloadAction<BookActionPayload>) => {
+      const { book } = action.payload;
+      const obj = objFromArray([book]);
+      state.allBooksById = { ...obj, ...state.allBooksById };
+      state.allIds = Object.keys(state.allBooksById);
+    },
     updateBookRecord: (state, action: PayloadAction<BookActionPayload>) => {
       const { book } = action.payload;
       state.allBooksById[book!._id] = book;
+    },
+    deleteBookRecord: (state, action: PayloadAction<BookActionPayload>) => {
+      const { id } = action.payload;
+      state.allIds = state.allIds.filter((i) => i !== id);
+      delete state.allBooksById[id!];
     },
     addCart: (state, action: PayloadAction<BookActionPayload>) => {
       state.cart.push(action.payload as Book);
@@ -71,7 +83,8 @@ const slice = createSlice({
 });
 
 const {
-  init, getBooks, addCart, removeCart, updateBookRecord, addBookToMyBooks, addArrayToMyBooks,
+  // eslint-disable-next-line max-len
+  init, getBooks, addCart, removeCart, updateBookRecord, addBookToMyBooks, addArrayToMyBooks, deleteBookRecord, addBook,
 } = slice.actions;
 
 export const { reducer } = slice;
@@ -80,17 +93,17 @@ export const { reducer } = slice;
 
 export const initializeBooks = () => async (dispatch: (arg0: any) => void) => {
   const response = await HTTP.get('books/all');
-  dispatch(init({ books: response.data }));
+  dispatch(init({ books: response!.data }));
 };
 
 export const getBookByID = (id: string) => async (dispatch: (arg0: any) => void) => {
   try {
     // return a book object and other books to feature in an array
-    const response = await HTTP.get(`books/${id}`);
+    const response = await HTTP.get(`books/${id}`).catch(() => { throw new Error('something went wrong'); });
     const { book, otherBooks } = response.data;
     dispatch(getBooks({ books: [book, ...otherBooks] as [Book] }));
   } catch {
-    // TODO: Handle errors
+    // TODO: Handle error
   }
 };
 
@@ -112,12 +125,22 @@ export const myBooks = (books: [Book]) => async (dispatch: (arg0: any) => void) 
 };
 
 export const updateBook = (update: Book) => async (dispatch: (arg0: any) => void) => {
-  await HTTP.put(`/books/${update._id}`, update);
+  await HTTP.put(`/books/${update._id}`, update).catch((err) => {
+    throw new Error(err);
+  });
   dispatch(updateBookRecord({ book: update }));
 };
 
-export const deleteBook = () => async (dispatch: (arg0: any) => void) => {
-  const response = await HTTP.get('books/all');
-  dispatch(init(response.data));
+export const newBook = (data: Book) => async (dispatch: (arg0: any) => void) => {
+  const response = await HTTP.post<Book>('/books/', data).catch((err) => {
+    throw new Error(err);
+  });
+  const book:Book = response.data;
+  dispatch(addBook({ book }));
+};
+
+export const deleteBook = (id: string) => async (dispatch: (arg0: any) => void) => {
+  await HTTP.delete(`books/${id}`);
+  dispatch(deleteBookRecord({ id }));
 };
 export default slice;

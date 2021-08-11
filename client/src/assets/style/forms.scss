@@ -44,7 +44,17 @@ form{
         font-family: 'Poppins', sans-serif;
         line-height: 24px;
     }
-    .buttons{
-        margin: $spacing *2 0;
+    
+
+    .error-message{
+        padding: $spacing;
+        margin: $spacing 0;
+        background-color: $primary-color-600;
+        color: #fff;
+        border-radius: 0.5rem;
     }
+}
+
+.buttons{
+    margin: $spacing *2 0;
 }

@@ -15,7 +15,7 @@ const Books = () => {
   }, [dispatch, allIds]);
 
   return (
-    <BookList books={books!} headline="Our Collection" />
+    <BookList path="Books" books={books!} headline="Our Collection" />
   );
 };
 

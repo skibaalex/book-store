@@ -63,8 +63,8 @@ booksRouter.delete('/:id', authenticate, isAdmin, asyncHandler(async (req: Reque
   const { id } = req.params;
   await Book.findByIdAndDelete(id);
   const book = await Book.findById(id);
-  if (!book) throw new CustomError('Wrong id', 400);
-  res.status(201).send();
+  if (book) throw new CustomError('Wrong id', 400);
+  res.status(200).send();
 }));
 
 /**

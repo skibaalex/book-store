@@ -12,15 +12,16 @@ const Header = () => {
       <div className="logo">
         <Link className="nav-link" to="/">Books</Link>
       </div>
+      {isAuthenticated && (
+      <span>
+        Hey,
+        {' '}
+        {user!.email}
+      </span>
+      )}
       <div className="menu">
         <nav>
-          {isAuthenticated && (
-          <span>
-            Hey,
-            {' '}
-            {user!.email}
-          </span>
-          )}
+
           <ul>
             <li className="active"><Link className="nav-link" to="/">Home</Link></li>
             <li className="active"><Link className="nav-link" to="/books">Books</Link></li>

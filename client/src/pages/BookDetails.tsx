@@ -3,6 +3,8 @@ import { useHistory, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 // eslint-disable-next-line import/no-unresolved
 import { IoIosStar, IoIosStarHalf, IoIosStarOutline } from 'react-icons/io';
+import { useSnackbar } from 'notistack';
+import useAuth from '../hooks/useAuth';
 import { Book } from '../types';
 import HTTP from '../hooks/HTTP';
 import BookCard from '../components/books/BookCard';
@@ -18,17 +20,34 @@ const BookDetails: FC<BookProps> = () => {
   const [notFound, setNotFound] = useState(false);
   const { id } = useParams<{id: string}>();
   const history = useHistory();
-  // eslint-disable-next-line max-len
-  const { allIds, allBooksById, isInitialized }:BookState = useSelector((state: RootState) => state.books);
+  const { enqueueSnackbar } = useSnackbar();
+  const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
+
+  // eslint-disable-next-line max-len
+  const {
+    allIds, allBooksById, isInitialized, myBooks,
+  }:BookState = useSelector((state: RootState) => state.books);
+
   useEffect(() => {
     if (!isInitialized) { dispatch(getBookByID(id)); }
     setBook(allBooksById[id]);
   }, [dispatch, allIds]);
 
-  const handleBuy = () => {
-    dispatch(buyBook(book!));
-    history.push('/account');
+  const handleBuy = async () => {
+    if (!isAuthenticated) return history.push('/login');
+
+    const ownBook = myBooks.reduce((prev, b) => prev || b._id === id, false);
+    if (ownBook) {
+      enqueueSnackbar('You already own this book');
+      return history.push('/account');
+    }
+    try {
+      await dispatch(buyBook(book!));
+      return history.push('/account');
+    } catch (err) {
+      return enqueueSnackbar('couldn\'t Purchase the book', { variant: 'error' });
+    }
   };
 
   useEffect(() => {

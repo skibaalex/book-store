@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './assets/style/style.scss';
+import { SnackbarProvider } from 'notistack';
 import Header from './components/header/Header';
 import AdminRoute from './components/protected-routes/AdminRoute';
 import ProtectedRoute from './components/protected-routes/AtuhRoute';
@@ -17,19 +18,25 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <div className="App">
-          <Header />
-          <Switch>
-            <Route exact path="/" component={HomePage} />
-            <Route path="/register" component={Register} />
-            <Route path="/login" component={Login} />
-            <Route path="/book/:id" component={BookDetails} />
-            <Route path="/books" component={Books} />
-            <ProtectedRoute path="/account" component={Account} />
-            <AdminRoute exact path="/admin" component={Admin} />
-            <AdminRoute path="/admin/edit/:id" component={EditBook} />
-          </Switch>
-        </div>
+        <SnackbarProvider
+          dense
+          maxSnack={3}
+        >
+          <div className="App">
+            <Header />
+            <Switch>
+              <Route exact path="/" component={HomePage} />
+              <Route path="/register" component={Register} />
+              <Route path="/login" component={Login} />
+              <Route path="/book/:id" component={BookDetails} />
+              <Route path="/books" component={Books} />
+              <ProtectedRoute path="/account" component={Account} />
+              <AdminRoute exact path="/admin" component={Admin} />
+              <AdminRoute exact path="/admin/new" component={EditBook} />
+              <AdminRoute exact path="/admin/edit/:id" component={EditBook} />
+            </Switch>
+          </div>
+        </SnackbarProvider>
       </AuthProvider>
     </BrowserRouter>
   );
