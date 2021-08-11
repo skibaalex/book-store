@@ -18,6 +18,14 @@ booksRouter.get('/purchased', authenticate, asyncHandler(async (req: Request, re
 }));
 
 /**
+ * Get all books
+ */
+booksRouter.get('/all', asyncHandler(async (_req: Request, res: Response) => {
+  const books = await Book.find();
+  res.send(books);
+}));
+
+/**
  * Create a Book
  */
 booksRouter.post('/', authenticate, isAdmin, asyncHandler(async (req: Request, res: Response) => {
@@ -42,8 +50,9 @@ booksRouter.put('/:id', authenticate, isAdmin, asyncHandler(async (req: Request,
 booksRouter.get('/:id', asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   const book = await Book.findById(id);
+  const otherBooks = await Book.find({ _id: { $ne: id } }).limit(4);
   if (!book) throw new CustomError('Wrong id', 400);
-  res.json(book);
+  res.json({ book, otherBooks });
 }));
 
 /**
@@ -54,8 +63,8 @@ booksRouter.delete('/:id', authenticate, isAdmin, asyncHandler(async (req: Reque
   const { id } = req.params;
   await Book.findByIdAndDelete(id);
   const book = await Book.findById(id);
-  if (!book) throw new CustomError('Wrong id', 400);
-  res.status(201).send();
+  if (book) throw new CustomError('Wrong id', 400);
+  res.status(200).send();
 }));
 
 /**
@@ -66,7 +75,8 @@ booksRouter.post('/purchase/:id', authenticate, asyncHandler(async (req: Request
   const { id } = req.params;
   const book = await Book.findById(id);
   if (!book) throw new CustomError('Wrong id', 400);
-  const user = await User.findByIdAndUpdate(req.user!._id, { $push: { books: book._id } });
+  const user = await User.findByIdAndUpdate(req.user!._id,
+    { $addToSet: { books: book } });
   if (!user) throw new CustomError('Oops something went wrong', 500);
   res.status(200).send(book);
 }));

@@ -1,39 +1,139 @@
-.App {
-    text-align: center;
-  }
-  
-  .App-logo {
-    height: 40vmin;
-    pointer-events: none;
-  }
-  
-  @media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-      animation: App-logo-spin infinite 20s linear;
-    }
-  }
-  
-  .App-header {
-    background-color: #282c34;
-    min-height: 100vh;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700');
+@import './mixins.scss';
+
+/*==============
+* Variables
+===============*/
+
+$spacing: 1rem;
+$primary-color: rgb(248, 66, 66);
+$primary-color-600: rgb(248, 101, 101);
+$primary-color-400: rgb(253, 101, 101);
+$primary-color-200: rgb(229, 162, 162);
+$dark-300: rgb(88, 88, 88);
+$dark-600: rgb(32, 32, 32);
+$dark-900: rgb(14, 14, 14);
+$color-success: rgb(101, 238, 67);
+$stars: rgb(240, 201, 29);
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+}
+
+p{
+    color: $dark-600;
+}
+
+.nav-link{
+    text-decoration: none;
+    color: $dark-600;
+}
+
+.container{
+    max-width: 1080px;
+    margin: auto;
+    padding: $spacing;
+}
+
+.row{
     display: flex;
-    flex-direction: column;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-  }
-  
-  .App-link {
-    color: #61dafb;
-  }
-  
-  @keyframes App-logo-spin {
-    from {
-      transform: rotate(0deg);
+}
+
+.col{
+    flex-basis: 100%;
+}
+
+.col-2{
+    flex-basis: 50%;
+    padding: $spacing;
+    align-items: center;
+}
+
+.col-3{
+    flex-basis: 33%;
+    padding: $spacing;
+    align-items: center;
+}
+
+.col-4{
+    flex-basis: 25%;
+    padding: $spacing;
+    &:last-child{
+        flex:1;
     }
-    to {
-      transform: rotate(360deg);
+}
+
+.star{
+    color: $stars
+}
+
+.btn{
+    text-decoration: none;
+    padding: $spacing $spacing*2;
+    background-color: $primary-color;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    transition: ease-in-out 0.2s;
+    display: inline-block;
+    cursor: pointer;
+    &:hover{
+        opacity: 0.8;
+        transform: translateY(-5px);
     }
-  }
-  
+    &.btn-secondary{
+        background-color: transparent;
+        color: $dark-900
+    }
+    &.success{
+        background-color: $color-success;
+    }
+}
+
+
+.jumbotron{
+    max-width: 1300px;
+    margin: auto;
+    padding: $spacing * 2 0;
+    img{
+        transform: translateY($spacing)
+    }
+    h1{
+        font-size: 50px;
+        font-weight: 500;
+        line-height: 60px;
+        margin-bottom: $spacing;
+    }
+    
+    button{
+        margin-top: $spacing * 2
+    }
+}
+
+h2{
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: $spacing * 2;
+    position: relative;
+    line-height: 60px;
+    color: $dark-900;
+    &::after{
+        @include after-underline(50px);
+    }
+}
+
+
+@import './header.scss';
+@import './books.scss';
+@import './forms.scss';
+@import './admin.scss';

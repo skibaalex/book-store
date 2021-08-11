@@ -1,0 +1,44 @@
+.header{
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: auto;
+}
+
+nav{
+    span{
+        margin-right: $spacing;
+    }
+    ul{
+        display: inline-block;
+        list-style-type: none;
+        
+        li{
+            display: inline-block;
+            position: relative;
+            &:hover{
+                &::after{
+                    @include after-underline(90%)
+                }
+            }
+        }
+        li:not(:last-child){
+            margin-right: $spacing * 2;
+        }
+    }
+}
+
+.logo{
+    position: relative;
+    text-decoration: none;
+    color: $dark-600;
+    font-size: 1.75rem;
+    font-weight: 600;
+    &::after{
+        @include after-underline(100%)
+    }
+    
+}
+

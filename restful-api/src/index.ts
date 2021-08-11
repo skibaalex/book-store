@@ -13,13 +13,18 @@ dotenv.config();
  * App configurations
  */
 app.use(cookies());
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use('/api', api);
 
 app.get('/', (_req, res) => {
   res.send('hello world');
+});
+
+// eslint-disable-next-line no-unused-vars
+app.use((_req, res, _next) => {
+  res.status(404).json({ status: 404, message: 'Oops can\'t find the resource you were looking for' });
 });
 
 app.use(errorHandle);
